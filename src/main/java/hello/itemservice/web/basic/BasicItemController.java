@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -23,6 +24,8 @@ public class BasicItemController {
 //        this.itemRepository = itemRepository;
 //    }
 
+
+
      @GetMapping
      public String items(Model model){
          List<Item> items = itemRepository.findAll();
@@ -30,12 +33,46 @@ public class BasicItemController {
          init();
          return "basic/items";
      }
+    @GetMapping("/{itemId}")
+    public String item(@PathVariable long itemId, Model model){
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
 
-     /* 테스트용 데이터 추가 */
-     @PostMapping
-     public void init(){
-         itemRepository.save(new Item("itemA", 10000, 10));
-         itemRepository.save(new Item("itemB", 20000, 20));
-     }
+        return "basic/item";
+    }
+
+    @GetMapping("/{itemId}/edit")
+    public String itemEdit(@PathVariable long itemId, Model model){
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+
+        return "basic/editForm";
+    }
+
+    @PostMapping("/{itemId}/save")
+    public String itemSave(@PathVariable long itemId, Model model){
+        Item item = itemRepository.findById(itemId);
+        model.addAttribute("item", item);
+
+        return "basic/addForm";
+    }
+
+    /* 테스트용 데이터 추가 */
+    @PostMapping
+    public void init(){
+        itemRepository.save(new Item("itemA", 10000, 10));
+        itemRepository.save(new Item("itemB", 20000, 20));
+    }
+
+
+
+
+
+
+
+
+
+
+
 }
 
